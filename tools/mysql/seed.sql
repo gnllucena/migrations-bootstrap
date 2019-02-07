@@ -1,0 +1,1 @@
+CREATE SCHEMA `migrations` DEFAULT CHARACTER SET utf8 ;

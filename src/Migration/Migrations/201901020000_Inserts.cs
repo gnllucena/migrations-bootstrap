@@ -1,6 +1,6 @@
-﻿using FluentMigrator;
+using FluentMigrator;
 
-namespace Migrations.Migrations
+namespace Migration.Migrations
 {
 
     [Migration(201901012359)]

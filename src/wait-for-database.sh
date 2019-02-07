@@ -6,4 +6,4 @@ do
     sleep 1
 done
 echo "GOOD TO GO"
-eval "dotnet Migrations.dll"
+eval "dotnet Migration.dll"

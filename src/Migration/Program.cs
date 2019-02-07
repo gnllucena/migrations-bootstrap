@@ -3,14 +3,23 @@ using FluentMigrator.Runner.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Migrations.Migrations;
+using Migration.Migrations;
 using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Migrations
+namespace Migration
 {
+    public class Database
+    {
+        public string Server { get; set; }
+        public string Port { get; set; }
+        public string Schema { get; set; }
+        public string User { get; set; }
+        public string Password { get; set; }
+    }
+
     public class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
@@ -44,9 +53,9 @@ namespace Migrations
 
             try
             {
-                var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
+                var host = BuildHost(args);
 
-                runner.MigrateUp();
+                host.
             }
             finally
             {
