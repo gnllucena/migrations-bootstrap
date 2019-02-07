@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/migration/bin/Debug/netcoreapp2.2/Migration.dll",
+            "program": "${workspaceFolder}/src/migrations/bin/Debug/netcoreapp2.2/Migrations.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/migration",
+            "cwd": "${workspaceFolder}/src/migrations",
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"

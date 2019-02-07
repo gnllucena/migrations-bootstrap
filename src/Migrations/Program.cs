@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Migration.Migrations;
+using Migration.Versions;
 using Serilog;
 using System;
 using System.IO;
@@ -40,6 +41,17 @@ namespace Migration
                 services.AddOptions();
 
                 services.Configure<Database>(hostContext.Configuration.GetSection("Database"));
+                
+                services.AddFluentMigratorCore();
+
+                services.AddSingleton<IConventionSet>(new DefaultConventionSet("ESTABCORE", null));
+
+                services.ConfigureRunner(runner =>
+                {
+                    runner.AddOracleManaged()
+                        .WithGlobalConnectionString(Configuration["ConnectionStringsMigration:Oracle"])
+                        .ScanIn(typeof(Bootstrap).Assembly).For.Migrations();
+                });
             })
             .UseSerilog()
             .Build();
@@ -55,7 +67,9 @@ namespace Migration
             {
                 var host = BuildHost(args);
 
-                host.
+                var runner = host.Services.GetService<IMigrationRunner>();
+
+                runner.MigrateUp();
             }
             finally
             {
