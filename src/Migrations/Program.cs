@@ -3,24 +3,14 @@ using FluentMigrator.Runner.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Migration.Migrations;
-using Migration.Versions;
+using Migrations.Versions;
 using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Migration
+namespace Migrations
 {
-    public class Database
-    {
-        public string Server { get; set; }
-        public string Port { get; set; }
-        public string Schema { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
-    }
-
     public class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
@@ -40,23 +30,23 @@ namespace Migration
             {
                 services.AddOptions();
 
-                services.Configure<Database>(hostContext.Configuration.GetSection("Database"));
-                
                 services.AddFluentMigratorCore();
 
-                services.AddSingleton<IConventionSet>(new DefaultConventionSet("ESTABCORE", null));
+                services.AddSingleton<IConventionSet>(new DefaultConventionSet(Configuration["Database:Schema"], null));
 
                 services.ConfigureRunner(runner =>
                 {
-                    runner.AddOracleManaged()
-                        .WithGlobalConnectionString(Configuration["ConnectionStringsMigration:Oracle"])
+                    var connectionstring = $"Server={Configuration["Database:Server"]};Port={Configuration["Database:Port"]};Database={Configuration["Database:Schema"]};Uid={Configuration["Database:User"]};Pwd={Configuration["Database:Password"]};";
+
+                    runner.AddMySql5()
+                        .WithGlobalConnectionString(connectionstring)
                         .ScanIn(typeof(Bootstrap).Assembly).For.Migrations();
                 });
             })
             .UseSerilog()
             .Build();
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()

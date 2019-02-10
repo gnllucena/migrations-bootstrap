@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System;
+using FluentMigrator;
+using Microsoft.Extensions.Options;
 
-namespace Migration.Versions
+namespace Migrations.Versions
 {
 
     [Migration(201901012359)]
@@ -8,18 +10,14 @@ namespace Migration.Versions
     {
         public override void Up()
         {
-            if (!IfDatabase("Oracle").Schema.Schema("ESTABCORE").Table("TARIFAS").Column("DSTARIFA").Exists())
-            {
-                Create.Column("DSTARIFA").OnTable("TARIFAS").InSchema("ESTABCORE").AsString();
-
-                Create.Table("Status")
-                    .WithColumn("Id").AsInt32().PrimaryKey().Identity()
-                    .WithColumn("Description").AsString();
-            }
+            Create.Table("Process")
+                .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+                .WithColumn("Status").AsInt32();
         }
 
         public override void Down()
         {
+            Delete.Table("Process");
         }
     }
 }
