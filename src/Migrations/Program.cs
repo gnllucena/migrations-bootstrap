@@ -40,7 +40,9 @@ namespace Migrations
 
                     runner.AddMySql5()
                         .WithGlobalConnectionString(connectionstring)
-                        .ScanIn(typeof(Bootstrap).Assembly).For.Migrations();
+                        .ScanIn(typeof(Bootstrap).Assembly)
+                        .For.Migrations()
+                        .For.EmbeddedResources();
                 });
             })
             .UseSerilog()
